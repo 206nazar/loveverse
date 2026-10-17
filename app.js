@@ -23,17 +23,18 @@ const { data, error } = await db.rpc(
 if(error)throw error;const story=Array.isArray(data)?data[0]:data;if(!story)throw Error('Історію не знайдено або її видалено.');return story;}
 function experience(data) {
   const t = themes[data.theme] || themes.stars;
+  const themeKey = Object.hasOwn(themes, data.theme) ? data.theme : 'stars';
   let stage = -1;
   const opened = new Set();
 
   function render() {
     if (stage === -1) {
-      view(`<div class="panel scene reveal"><div class="eyebrow">Особливе послання</div><div class="planet">${t.emoji}</div><h2>${esc(data.recipient)}, для тебе створили цілий всесвіт</h2><p>Тут заховані три спогади й одне послання від серця.</p><button class="btn" id="start">✨ Увійти у всесвіт</button></div>`);
+      view(`<div class="panel scene reveal lv-scene lv-intro" data-theme="${themeKey}"><div class="lv-orbit" aria-hidden="true">✦ · ✧ · ✦</div><div class="eyebrow">Особливе послання</div><div class="planet">${t.emoji}</div><h2>${esc(data.recipient)}, для тебе створили цілий всесвіт</h2><p>Тут заховані три спогади й одне послання від серця.</p><button class="btn" id="start">✨ Увійти у всесвіт</button></div>`);
       document.getElementById('start').onclick = () => { stage = 0; render(); };
       return;
     }
     if (stage === 0) {
-      view(`<div class="panel reveal"><div class="center"><div class="eyebrow">${esc(t.name)}</div><h2>${esc(data.recipient)}, обери чарівне місце ✨</h2><p class="muted">Відкрий усі три таємниці, щоб побачити головне послання.</p></div><div class="world">${t.places.map((place,i)=>`<button data-place="${i}" class="${opened.has(i)?'done':''}"><span class="emoji">${t.icons[i]}</span>${esc(place)}<br><small>${opened.has(i)?'✓ Відкрито':'Натисни, щоб відкрити'}</small></button>`).join('')}</div><div class="progress"><div style="width:${opened.size/3*100}%"></div></div><p class="center muted">${opened.size} / 3 таємниці</p>${opened.size===3?'<div class="center"><button class="btn" id="final">💝 Відкрити головне послання</button></div>':''}</div>`);
+      view(`<div class="panel reveal lv-world-panel" data-theme="${themeKey}"><div class="center"><div class="eyebrow">${esc(t.name)}</div><h2>${esc(data.recipient)}, обери чарівне місце ✨</h2><p class="muted">Відкрий усі три таємниці, щоб побачити головне послання.</p></div><div class="world">${t.places.map((place,i)=>`<button data-place="${i}" class="${opened.has(i)?'done':''}"><span class="emoji">${t.icons[i]}</span>${esc(place)}<br><small>${opened.has(i)?'✓ Відкрито':'Натисни, щоб відкрити'}</small></button>`).join('')}</div><div class="progress" role="progressbar" aria-label="Відкриті спогади" aria-valuemin="0" aria-valuemax="3" aria-valuenow="${opened.size}"><div style="width:${opened.size/3*100}%"></div></div><p class="center muted">${opened.size} / 3 таємниці</p>${opened.size===3?'<div class="center"><button class="btn" id="final">💝 Відкрити головне послання</button></div>':''}</div>`);
       document.querySelectorAll('[data-place]').forEach(b => b.onclick = () => { stage = Number(b.dataset.place) + 1; opened.add(stage - 1); render(); });
       const finalButton = document.getElementById('final');
       if (finalButton) finalButton.onclick = () => { stage = 4; render(); };
@@ -41,7 +42,7 @@ function experience(data) {
     }
     if (stage >= 1 && stage <= 3) {
       const i = stage - 1;
-      view(`<div class="panel scene reveal"><div class="step">ТАЄМНИЦЯ ${stage} З 3</div><div class="planet">${t.icons[i]}</div><h2>${esc(t.places[i])}</h2><p>${esc(data.memories[i] || 'Наш незабутній момент.')}</p><button class="btn" id="back">✨ Повернутися до світу</button></div>`);
+      view(`<div class="panel scene reveal lv-scene lv-memory" data-theme="${themeKey}"><div class="step">ТАЄМНИЦЯ ${stage} З 3</div><div class="lv-memory-stars" aria-hidden="true">✦ ✧ ✦</div><div class="planet">${t.icons[i]}</div><h2>${esc(t.places[i])}</h2><p>${esc(data.memories[i] || 'Наш незабутній момент.')}</p><div class="lv-memory-actions"><button class="btn secondary" id="back">← До всесвіту</button><button class="btn" id="next-memory">${opened.size === 3 ? "💝 До послання" : "✨ Наступна таємниця"}</button></div></div>`);
       document.getElementById('back').onclick = () => { stage = 0; render(); };
       return;
     }
@@ -52,8 +53,8 @@ function experience(data) {
       return `<span aria-hidden="true" style="--x:${(i*37+11)%100}%;--delay:${(i*.43)%9}s;--duration:${5+i%6}s;--size:${18+i%23}px">${symbols[i%symbols.length]}</span>`;
     }).join('');
     view(`
-      <div class="love-ending">
-        <section class="panel scene reveal love-letter">
+      <div class="love-ending" data-theme="${themeKey}">
+        <section class="panel scene reveal love-letter"><div class="lv-letter-stars" aria-hidden="true">✧ ✦ ✧</div>
           <div class="big-heart">💗</div>
           <div class="eyebrow">Головне послання</div>
           <h2>${esc(data.recipient)}, це для тебе</h2>
