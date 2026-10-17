@@ -44,6 +44,16 @@ function experience(data) {
       const i = stage - 1;
       view(`<div class="panel scene reveal lv-scene lv-memory" data-theme="${themeKey}"><div class="step">ТАЄМНИЦЯ ${stage} З 3</div><div class="lv-memory-stars" aria-hidden="true">✦ ✧ ✦</div><div class="planet">${t.icons[i]}</div><h2>${esc(t.places[i])}</h2><p>${esc(data.memories[i] || 'Наш незабутній момент.')}</p><div class="lv-memory-actions"><button class="btn secondary" id="back">← До всесвіту</button><button class="btn" id="next-memory">${opened.size === 3 ? "💝 До послання" : "✨ Наступна таємниця"}</button></div></div>`);
       document.getElementById('back').onclick = () => { stage = 0; render(); };
+      document.getElementById('next-memory').onclick = () => {
+        const next = [0, 1, 2].find(index => !opened.has(index));
+        if (next === undefined) {
+          stage = 4;
+        } else {
+          opened.add(next);
+          stage = next + 1;
+        }
+        render();
+      };
       return;
     }
 

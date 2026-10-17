@@ -55,11 +55,11 @@
 .lv-finale-kicker { color:#f8c5e8; font-size:.9rem; letter-spacing:.1em; margin-bottom:24px; }
 .magic-finale { transition:box-shadow 1.2s ease; }
 .magic-finale.lv-active { box-shadow:0 0 70px color-mix(in srgb, var(--lv-glow) 22%, transparent); }
-.magic-finale .finale-content { opacity:.15; transform:translateY(40px); transition:opacity 1s ease,transform 1s ease; }
+.magic-finale .finale-content { opacity:1; transform:none; }
 .magic-finale.lv-active .finale-content { opacity:1; transform:translateY(0); }
-.magic-finale .firework { animation-play-state:paused; }
+.magic-finale .firework { animation-play-state:running; }
 .magic-finale.lv-active .firework { animation-play-state:running; }
-.magic-finale .floating-hearts span { animation-play-state:paused; }
+.magic-finale .floating-hearts span { animation-play-state:running; }
 .magic-finale.lv-active .floating-hearts span { animation-play-state:running; }
 .love-ending[data-theme="garden"] .magic-finale { background:radial-gradient(ellipse at 50% 55%,#71345c 0%,#321c45 48%,#100b27 100%); }
 .love-ending[data-theme="ocean"] .magic-finale { background:radial-gradient(ellipse at 50% 55%,#244f7b 0%,#1a294f 48%,#100b27 100%); }
@@ -76,3 +76,22 @@
   .magic-finale .finale-content { opacity:1; transform:none; }
   .magic-finale .firework, .magic-finale .floating-hearts span { animation:none; }
 }
+
+/* LoveVerse 2.0.1: плавна зірка без конфлікту анімацій */
+.lv-memory .planet, .lv-intro .planet {
+  animation: lvGentleFloat 6.5s ease-in-out infinite;
+  transform-origin: center center;
+  will-change: transform;
+  backface-visibility: hidden;
+}
+@keyframes lvGentleFloat {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(-2deg); }
+  50% { transform: translate3d(0, -12px, 0) rotate(2deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lv-memory .planet, .lv-intro .planet { animation: none; will-change: auto; }
+}
+
+/* 2.0.2: фінал завжди читабельний, навіть без IntersectionObserver */
+.magic-finale .finale-content { opacity:1 !important; transform:none !important; }
+.magic-finale .firework, .magic-finale .floating-hearts span { animation-play-state:running; }
