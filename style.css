@@ -172,3 +172,40 @@
 .lv4-music:hover{background:#ffffff26}
 @keyframes lv4Photo{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:none}}
 @media(prefers-reduced-motion:reduce){.lv4-photo img{animation:none}}
+
+/* LoveVerse 4.0 */
+#app.lv4-enter>*{animation:lv4In .6s cubic-bezier(.2,.8,.2,1) both}
+@keyframes lv4In{from{opacity:.25;transform:translateY(20px) scale(.99);filter:blur(5px)}to{opacity:1;transform:none;filter:blur(0)}}
+.lv4-preview-banner{position:sticky;top:6px;z-index:80;display:flex;justify-content:center;align-items:center;gap:10px;flex-wrap:wrap;background:#2b193feb;backdrop-filter:blur(12px);padding:12px;border:1px solid #f2aee0;border-radius:16px;margin-bottom:14px}
+.lv4-preview-banner .btn{padding:9px 14px;font-size:.85rem}
+.lv4-polaroid{margin:0 auto 22px;padding:13px 13px 18px;background:#fff9f1;max-width:450px;transform:rotate(-2deg);box-shadow:0 20px 50px #0008;border-radius:3px;animation:lv4PhotoIn .7s ease both}
+.lv4-polaroid img{display:block;width:100%;max-height:380px;object-fit:cover;border-radius:2px}
+.lv4-polaroid figcaption{color:#735064;text-align:center;font:1rem Georgia,serif;padding-top:14px}
+[data-theme="garden"] .lv4-polaroid{transform:rotate(2deg)}
+[data-theme="ocean"] .lv4-polaroid{transform:rotate(-1deg)}
+.lv3-place-orbit.lv4-zoom{animation:lv4Zoom .42s ease-in forwards}
+@keyframes lv4Zoom{to{transform:scale(2.4);opacity:0;filter:blur(12px)}}
+@keyframes lv4PhotoIn{from{opacity:0;translate:0 22px;scale:.94}to{opacity:1;translate:0 0;scale:1}}
+.lv4-star-game{position:absolute;inset:0;z-index:8;overflow:hidden;transition:opacity .8s ease;pointer-events:auto}
+.lv4-star-title{position:absolute;top:10%;left:8%;right:8%;text-align:center;color:#fff0fa;text-shadow:0 4px 20px #180721}
+.lv4-star-title h3{font-size:clamp(1.2rem,3vw,1.9rem);margin:0 0 10px}
+.lv4-star-title p{margin:0 0 8px}
+.lv4-star{position:absolute;left:var(--sx);top:var(--sy);font-size:clamp(3.2rem,7vw,5rem);line-height:1;color:#ffe4a0;text-shadow:0 0 22px #ffbdf0,0 0 45px #ffd67b;background:none;border:0;cursor:pointer;z-index:2;animation:lv4Float 3s ease-in-out infinite alternate}
+.lv4-star:hover,.lv4-star:focus-visible{scale:1.2}
+.lv4-star.lv4-collected{opacity:0;scale:.1;pointer-events:none;transition:opacity .5s,scale .5s}
+.lv4-big-heart{position:absolute;top:50%;left:50%;translate:-50% -50%;font-size:clamp(170px,35vw,360px);color:#ff89c3;opacity:0;scale:.1;filter:drop-shadow(0 0 40px #ff4b9d);pointer-events:none}
+.lv4-complete .lv4-big-heart{animation:lv4Heart 2.2s ease both}
+.lv4-complete{animation:lv4Exit .7s ease 2.3s forwards;pointer-events:none}
+.lv4-await .lv4-final-reveal{opacity:0!important;pointer-events:none;transform:translateY(25px)!important}
+.lv4-unlocked .lv4-final-reveal{animation:lv4Reveal 1s ease 2.6s both;opacity:1!important}
+@keyframes lv4Float{to{transform:translateY(-16px) rotate(9deg)}}
+@keyframes lv4Heart{0%{opacity:0;scale:.1}40%{opacity:1;scale:1.2}70%{opacity:1;scale:1}100%{opacity:0;scale:1.5}}
+@keyframes lv4Exit{to{opacity:0;visibility:hidden}}
+@keyframes lv4Reveal{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:none}}
+@media(max-width:650px){.lv4-preview-banner span{width:100%;text-align:center}.lv4-polaroid{max-width:92%}.lv4-star-title{top:10%}.lv4-star{font-size:3.1rem}}
+@media(prefers-reduced-motion:reduce){#app.lv4-enter>*,.lv4-polaroid,.lv4-star{animation:none}.lv3-place-orbit.lv4-zoom{animation:none}.lv4-complete{opacity:0;visibility:hidden;animation:none}.lv4-unlocked .lv4-final-reveal{animation:none}}
+
+/* Delay finale message until the constellation completes. */
+.lv4-unlocked .lv4-final-reveal{visibility:hidden;animation:lv4FinalVisible 1s ease 2.6s forwards}
+@keyframes lv4FinalVisible{from{visibility:visible;opacity:0;transform:translateY(30px)}to{visibility:visible;opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){.lv4-unlocked .lv4-final-reveal{visibility:visible;animation:none}}
